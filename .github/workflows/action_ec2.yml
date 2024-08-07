@@ -1,43 +1,27 @@
-name: Push-to-EC2
+script: |
+  # Change to the target directory
+  cd /opt/caguar/
+  
+  # List files with detailed info
+  ls -ltr
 
-# Trigger deployment only on push to main branch
-on:
-  push:
-    branches:
-      - main
+  # Debugging: Check if the file exists before attempting to move
+  if [ -f tracker-servergit ]; then
+    echo "tracker-servergit found"
+  else
+    echo "tracker-servergit not found"
+  fi
 
-jobs:
-  deploy:
-    name: Deploy to EC2 on master branch push
-    runs-on: ubuntu-latest
+  # Rename the old file, if it exists
+  if [ -f tracker-server ]; then
+    mv tracker-server tracker-server-old || echo "Failed to rename tracker-server"
+  else
+    echo "tracker-server not found"
+  fi
 
-    steps:
-      - name: Checkout the files
-        uses: actions/checkout@v2
-
-      - name: Deploy to Server 1
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.HOST_DNS }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.TARGET_DIR }}
-
-      - name: Executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST_DNS }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            # Change to the target directory
-            cd /opt/caguar/
-
-            # List files to check the current state
-            ls -ltr
-
-            # Rename the old file, if it exists
-            mv tracker-server tracker-server-old || echo "tracker-server not found"
-
-            # Move the new file into place
-            mv tracker-servergit tracker-server || echo "tracker-servergit not found"
+  # Move the new file into place
+  if [ -f tracker-servergit ]; then
+    mv tracker-servergit tracker-server || echo "Failed to move tracker-servergit"
+  else
+    echo "tracker-servergit not found"
+  fi
