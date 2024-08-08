@@ -4,7 +4,7 @@ name: Push-to-EC2
 on:
   push:
     branches:
-      - main
+      - backend
 
 jobs:
   deploy:
@@ -31,7 +31,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             ls -ltr
-              cp -r 'tracker-servergit.txt' /opt/caguar/
+            cp -r 'tracker-servergit.txt' /opt/caguar/
             cd /opt/caguar/
             ls
             mv tracker-server tracker-server-old
