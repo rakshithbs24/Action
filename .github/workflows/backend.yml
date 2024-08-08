@@ -33,9 +33,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             ls -ltr
-            cp -r 'tracker-servergit' /opt/caguar/
+            cp -r 'tracker-servergit.txt' /opt/caguar/
             cd /opt/caguar/
             ls
             mv tracker-server tracker-server-old
-            mv 'tracker-servergit' tracker-server
+            mv 'tracker-servergit.txt' tracker-server
           
