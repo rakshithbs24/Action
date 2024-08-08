@@ -1,6 +1,6 @@
-name: Deploy to EC2 on Backend Branch Push
+name: Push-to-EC2
 
-# Trigger deployment only on push to backend branch
+# Trigger deployment only on push to main branch
 on:
   push:
     branches:
@@ -8,14 +8,12 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to EC2 on backend branch push
+    name: Deploy to EC2 on master branch push
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the backend branch
+      - name: Checkout the files
         uses: actions/checkout@v2
-        with:
-          ref: backend
 
       - name: Deploy to Server 1
         uses: easingthemes/ssh-deploy@main
@@ -33,9 +31,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             ls -ltr
-            cp -r 'tracker-servergit.txt' /opt/caguar/
+              cp -r 'tracker-servergit' /opt/caguar/
             cd /opt/caguar/
             ls
             mv tracker-server tracker-server-old
-            mv 'tracker-servergit.txt' tracker-server
-          
+            mv 'tracker-servergit' tracker-server
