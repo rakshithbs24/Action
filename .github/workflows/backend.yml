@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to EC2 on master branch push
+    name: Deploy to EC2 on main branch push
     runs-on: ubuntu-latest
 
     steps:
@@ -23,16 +23,32 @@ jobs:
           REMOTE_USER: ${{ secrets.USERNAME }}
           TARGET: ${{ secrets.TARGET_DIR }}
 
-      - name: Executing remote ssh commands using ssh key
+      - name: Executing remote SSH commands using SSH key
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST_DNS }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            ls -ltr
-            cp -r 'tracker-servergit.txt' /opt/caguar/
+            # Copy the new build file to /opt/caguar/
+            cp -r buildgit.zip /opt/caguar/
+
+            # Change to the /opt/caguar/ directory
             cd /opt/caguar/
-            ls
-            mv tracker-server tracker-server-old
-            mv 'tracker-servergit.txt' tracker-server
+
+            # List files to verify the copied build file is present
+            ls 
+
+            # Rename the existing 'modern' directory to 'modern26'
+            mv modern modern-old
+
+            # List files to verify the renaming was successful
+            ls -ltr
+
+            # Unzip the new build file
+            unzip buildgit.zip
+
+            # Rename the unzipped directory to 'modern'
+            mv build modern
+
+         
