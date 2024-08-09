@@ -30,25 +30,17 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Copy the new build file to /opt/caguar/
-            cp -r buildgit.zip /opt/caguar2/
-
-            # Change to the /opt/caguar/ directory
+            # Copy the zip file to the target directory
+            sudo cp -r buildgit.zip /opt/caguar2/
+            
+            # Change to the target directory
             cd /opt/caguar2/
-
-            # List files to verify the copied build file is present
-            ls 
-
-            # Rename the existing 'modern' directory to 'modern26'
-            mv modern modern-old
-
-            # List files to verify the renaming was successful
-            ls -ltr
-
-            # Unzip the new build file
-            unzip buildgit.zip
-
-            # Rename the unzipped directory to 'modern'
-            mv build modern
-
-         
+            
+            # Rename the old directory if it exists
+            sudo mv modern modern-old 
+            
+            # Unzip the new build
+            sudo unzip buildgit.zip
+            
+            # Rename the extracted directory to 'modern'
+            sudo mv build modern
