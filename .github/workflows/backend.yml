@@ -37,10 +37,13 @@ jobs:
             cd /opt/caguar2/
             
             # Rename the old directory if it exists
-            sudo mv modern modern-old 
+            sudo mv modern modern-old || echo "Directory 'modern' not found"
             
             # Unzip the new build
             sudo unzip buildgit.zip
             
+            # List contents after unzip
+            ls -l
+            
             # Rename the extracted directory to 'modern'
-            sudo mv build modern
+            sudo mv build modern || echo "Directory 'build' not found after unzip"
