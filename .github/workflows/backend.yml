@@ -38,7 +38,7 @@ jobs:
             cd /opt/caguar2/
             
             # Unzip the new build
-            sudo unzip buildgit.zip
+            sudo unzip -o buildgit.zip
             
             # Move the existing 'modern' directory to 'modern-old'
             sudo mv modern modern-old
