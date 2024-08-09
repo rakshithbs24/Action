@@ -47,4 +47,4 @@ jobs:
             ls -l
             
             # Rename the extracted directory to 'modern'
-            sudo mv build modern || echo "Directory 'build' not found after unzip"
+            sudo mv build.txt modern || echo "Directory 'build' not found after unzip"
