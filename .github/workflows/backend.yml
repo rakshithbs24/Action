@@ -15,7 +15,7 @@ jobs:
       - name: Checkout the files
         uses: actions/checkout@v2
 
-      - name: Deploy to Server 1
+      - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -30,20 +30,22 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
             # Copy the zip file to the target directory
             sudo cp -r buildgit.zip /opt/caguar2/
             
             # Change to the target directory
-            cd /opt/caguar2/ 
+            cd /opt/caguar2/
             
             # Unzip the new build
             sudo unzip buildgit.zip
-
-            # Rename the old directory if it exists
+            
+            # Move the existing 'modern' directory to 'modern-old'
             sudo mv modern modern-old
             
+            # Rename the extracted directory to 'modern'
+            sudo mv build modern
+
             # List contents after unzip
             ls -l
             
-            # Rename the extracted directory to 'modern'
-            sudo mv 'build' modern || echo "Directory 'build' not found after unzip"
